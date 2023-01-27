@@ -1,11 +1,14 @@
 import { createStore } from "vuex"
+import AuthRepository from "./repositories/AuthRepository"
 import Repository from "./repositories/RepositoryFactory"
 const EventRepository = Repository.get("events")
 
 const store = createStore({
     state: {
         events: [],
-        userevents: []
+        user: [],
+        userevents: [],
+        loggedIn: false
     },
 
     actions: {
@@ -27,7 +30,25 @@ const store = createStore({
             if(result) {
                 commit("DELETE_EVENT", id)
             }
-        }
+        },
+
+        // Authentication
+        async login({ commit }, payload) {
+            commit("STORE_LOGGED_IN_USER", await AuthRepository.login(payload))
+        },
+        async logout({ commit }) {
+            try {
+                await AuthRepository.logout()
+                commit("STORE_LOGGED_OUT_USER", true)
+            } catch (error) {
+                console.log(error)
+            }
+
+            return false
+        },
+        async register({ commit }, payload) {
+            return await AuthRepository.register(payload)
+        },
     },
 
     mutations: {
@@ -47,12 +68,44 @@ const store = createStore({
         DELETE_EVENT: (state, id) => {
             const index =  state.events.findIndex((event) => event.id == id)
             state.events.data.splice(index, 1)
+        },
+        STORE_USER_EVENTS: (state, response) => {
+            const { data } = response
+            state.userevents = data
+        },
+
+        STORE_LOGGED_IN_USER: (state, response) => {
+            const { data } = response
+
+            if(data) {
+                localStorage.setItem("token", data.token)
+                localStorage.setItem("user", data.user)
+                state.user = data.user
+                state.token = data.token
+                state.loggedIn = true
+            }
+        },
+        STORE_LOGGED_OUT_USER: (state, response) => {
+            if(response) {
+                localStorage.removeItem("token")
+                localStorage.removeItem("user")
+                state.user = {}
+                state.token = null
+                state.insights = null
+                state.loggedIn = false
+            }
         }
     },
 
     getters: {
         getEvent: (state) => (id) => {
             return state.events.data.find((event) => event.id == id)
+        },
+        isAdmin: (state) => {
+            return state.user.is_admin
+        },
+        isUser: (state) => {
+            return !state.user.is_admin
         }
     }
 })
