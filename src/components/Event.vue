@@ -8,7 +8,7 @@
                     <small class="d-inline-block pb-3">{{ textPrefix(event.description, 100, '...') }}</small>
                     <span>
                         <h5>Event Date:</h5>
-                        <h6 class="pb-3" style="font-size: .8em">{{event.date ?? "-"}}</h6>
+                        <h6 class="pb-3" style="font-size: .8em">{{new Date(event.date).toLocaleDateString('id-ID') ?? "-"}}</h6>
                     </span>
                     <router-link :to="{ name: 'events', params: {id: event.id}}" class="btn btn-primary" style="width: 100%">View More</router-link>
                 </div>

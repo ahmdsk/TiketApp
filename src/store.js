@@ -52,7 +52,7 @@ const store = createStore({
 
     getters: {
         getEvent: (state) => (id) => {
-            return state.events.find((event) => event.id == id)
+            return state.events.data.find((event) => event.id == id)
         }
     }
 })
