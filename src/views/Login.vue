@@ -72,15 +72,13 @@ export default {
                 if(store.state.loggedIn && store.getters["isAdmin"]) {
                     return router.push("/admin")
                 } else {
-                    console.log(store)
-                    // return router.push({
-                    //     name: "user",
-                    //     params: { id: store.state.user.id }
-                    // })
+                    return router.push({
+                        name: "user",
+                        params: { id: store.state.user.id }
+                    })
                 }
             } catch (error) {
-                console.log(store.state)
-                // console.log(error)
+                console.log(error)
             }
         }
 
