@@ -1,7 +1,9 @@
+import AuthRepository from "./AuthRepository"
 import EventRepository from "./EventRepository"
 
 const repository = {
-    events: EventRepository
+    events: EventRepository,
+    auth: AuthRepository
 }
 
 export default {

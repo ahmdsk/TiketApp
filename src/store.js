@@ -1,7 +1,7 @@
 import { createStore } from "vuex"
-import AuthRepository from "./repositories/AuthRepository"
 import Repository from "./repositories/RepositoryFactory"
 const EventRepository = Repository.get("events")
+const AuthRepository = Repository.get("auth")
 
 const store = createStore({
     state: {
@@ -40,6 +40,7 @@ const store = createStore({
             try {
                 await AuthRepository.logout()
                 commit("STORE_LOGGED_OUT_USER", true)
+                return true
             } catch (error) {
                 console.log(error)
             }
