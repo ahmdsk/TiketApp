@@ -12,11 +12,24 @@
                     <li class="nav-item">
                         <router-link to="/" class="nav-link active" aria-current="page">Home</router-link>
                     </li>
+
+                    <!-- If Login -->
                     <li class="nav-item">
-                        <router-link to="/login" class="nav-link" aria-current="page">Login</router-link>
+                        <router-link to @click="redirect" class="nav-link" aria-current="page" v-if="loggedIn">Dashboard</router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/register" class="nav-link" aria-current="page">Register</router-link>
+                        <router-link to="/admin/add" class="nav-link" aria-current="page" v-if="isAdmin">Add Event</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to @click="logout" class="nav-link" aria-current="page" v-if="loggedIn">Logout</router-link>
+                    </li>
+
+                    <!-- If Not Login -->
+                    <li class="nav-item">
+                        <router-link to="/login" class="nav-link" aria-current="page" v-if="!loggedIn">Login</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/register" class="nav-link" aria-current="page" v-if="!loggedIn">Register</router-link>
                     </li>
                 </ul>
             </div>
@@ -25,7 +38,21 @@
 </template>
 
 <script>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 export default {
-    name: 'Navbar'
+    name: 'Navbar',
+    setup() {
+        const store = useStore()
+        const logout = async () => {
+            await store.dispatch("logout")
+        }
+
+        return {
+            loggedIn: computed(() => store.state.loggedIn),
+            logout,
+            isAdmin: store.getters["isAdmin"]
+        }
+    }
 }
 </script>
