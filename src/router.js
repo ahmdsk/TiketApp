@@ -5,6 +5,7 @@ import Home from "./views/Home.vue"
 import Login from "./views/Login.vue"
 import Register from "./views/Register.vue"
 import Ticket from "./views/Ticket.vue"
+import User from "./views/dashboard/User.vue"
 
 const routes = [
     {
@@ -26,6 +27,21 @@ const routes = [
         path: "/events/:id",
         name: "events",
         component: Ticket,
+    },
+    {
+        path: "/user/:id",
+        name: "user",
+        component: User,
+        meta: { requiresAuth: true },
+        beforeEnter(to, from, next) {
+            if(store.getters["isUser"] && parseInt(store.state.user.id) === parseInt(to.params.id)) {
+                next();
+            } else {
+                next({
+                    name: "login"
+                })
+            }
+        }
     }
 ]
 
@@ -33,7 +49,6 @@ const router = createRouter({ history: createWebHistory(), routes })
 
 router.beforeEach((to, from, next) => {
     to.matched.some((record) => {
-        console.log("record: "+record)
         return record.meta.requiresAuth
     })
 
