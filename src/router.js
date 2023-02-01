@@ -6,6 +6,9 @@ import Login from "./views/Login.vue"
 import Register from "./views/Register.vue"
 import Ticket from "./views/Ticket.vue"
 import User from "./views/dashboard/User.vue"
+import AdminHome from "./views/dashboard/Admin.vue"
+import Add from "./views/dashboard/Add.vue"
+import Admin from "./layouts/Admin.vue"
 
 const routes = [
     {
@@ -36,6 +39,31 @@ const routes = [
         beforeEnter(to, from, next) {
             if(store.getters["isUser"] && parseInt(store.state.user.id) === parseInt(to.params.id)) {
                 next();
+            } else {
+                next({
+                    name: "login"
+                })
+            }
+        }
+    },
+    {
+        path: "/admin",
+        name: "admin",
+        component: Admin,
+        meta: { requiresAuth: true },
+        childern: [
+            {
+                path: "add",
+                component: Add,
+            },
+            {
+                path: "/",
+                component: AdminHome
+            }
+        ],
+        beforeEnter(to, from, next) {
+            if(store.getters["isAdmin"]) {
+                next()
             } else {
                 next({
                     name: "login"
