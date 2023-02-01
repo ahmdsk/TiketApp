@@ -8,10 +8,10 @@
         <div class="container pb-5">
             <div class="row pb-5">
                 <div class="col-md-6">
-                    <Counter title="Total Events" :value="10" />
+                    <Counter title="Total Events" :value="userevents.length" />
                 </div>
                 <div class="col-md-6">
-                    <Counter title="Total Amount Spent" :value="10" symbol="Rp." />
+                    <Counter title="Total Amount Spent" :value="0" symbol="Rp." />
                 </div>
             </div>
         </div>
